@@ -1,9 +1,9 @@
 package main
 
 import (
-	"GOandVueTest/conf"
-	"GOandVueTest/handlers"
 	"database/sql"
+	"evcharger/conf"
+	"evcharger/handlers"
 	"fmt"
 	"html/template"
 	"io"
