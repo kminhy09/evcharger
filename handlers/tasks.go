@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"evcharger/models"
+	"github.com/kminhy09/evcharger/models"
 
 	"github.com/labstack/echo"
 )

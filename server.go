@@ -2,11 +2,12 @@ package main
 
 import (
 	"database/sql"
-	"evcharger/conf"
-	"evcharger/handlers"
 	"fmt"
 	"html/template"
 	"io"
+
+	"github.com/kminhy09/evcharger/conf"
+	"github.com/kminhy09/evcharger/handlers"
 
 	"github.com/labstack/echo"
 	_ "github.com/lib/pq"

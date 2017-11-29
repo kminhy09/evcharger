@@ -2,12 +2,13 @@ package handlers
 
 import (
 	"encoding/xml"
-	"evcharger/conf"
-	"evcharger/models"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
+
+	"github.com/kminhy09/evcharger/conf"
+	"github.com/kminhy09/evcharger/models"
 
 	"github.com/labstack/echo"
 )
