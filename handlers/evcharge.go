@@ -39,7 +39,7 @@ func GetEvChargerData() models.EvCharger {
 
 	err = xml.Unmarshal(data, &response)
 	checkError(err)
-	fmt.Println(string(data))
+	//fmt.Println(string(data))
 
 	return response.EvCharger
 }
