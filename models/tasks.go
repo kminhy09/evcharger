@@ -7,17 +7,17 @@ import (
 	_ "github.com/lib/pq"
 )
 
-// Task is a struct containing Task data
-type Task struct {
-	UserId       int    `json:"userId"`
-	UserName     string `json:"userName"`
-	UserPassword string `json:"userPassword"`
-}
+type (
+	Task struct {
+		UserId       int    `json:"userId"`
+		UserName     string `json:"userName"`
+		UserPassword string `json:"userPassword"`
+	}
 
-// TaskCollection is collection of Tasks
-type TaskCollection struct {
-	Tasks []Task `json:"items"`
-}
+	TaskCollection struct {
+		Tasks []Task `json:"items"`
+	}
+)
 
 // GetTasks from the DB
 func GetTasks(db *sql.DB) TaskCollection {
@@ -46,8 +46,8 @@ func GetTasks(db *sql.DB) TaskCollection {
 // PutTask into DB
 func PutTask(db *sql.DB, userName, userPassword string) (int, error) {
 	sqlStatement := `INSERT INTO ev_useraccount(username, userpassword) 
-			VALUES($1, $2)
-			RETURNING userid`
+					VALUES($1, $2)
+					RETURNING userid;`
 
 	// Replace the '?' in our prepared statement with 'name'
 	result := 0
@@ -63,7 +63,7 @@ func PutTask(db *sql.DB, userName, userPassword string) (int, error) {
 // DeleteTask from DB
 func DeleteTask(db *sql.DB, userId int) (int64, error) {
 	sqlStatement := `DELETE FROM ev_useraccount
-					 WHERE userid = $1`
+					 WHERE userid = $1;`
 	fmt.Println(userId)
 	res, err := db.Exec(sqlStatement, userId)
 	if err != nil {

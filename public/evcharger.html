@@ -29,6 +29,12 @@
                   <h2>전기자동차 충전소</h2>
                   <br/>
                   <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" v-on:click="syncEvChargers">동기화</button>
+                    </span>
+                  </div>
+                  <br/>
+                  <div class="input-group">
                     <input type="text" 
                         class="form-control statNm" 
                         placeholder="검색" >
@@ -57,9 +63,23 @@
               created: function() {
                   this.$http.get('/evchargers').then(function(response) {
                       this.evchargers = response.data.evcharger.items ? response.data.evcharger.items : []
-                      console.log(response.data.evcharger.items);
+                      //console.log(response.data.evcharger);
                   })
-              }
+              },
+
+              methods: {
+                    syncEvChargers: function() {
+
+                        this.$http.put('/evchargers', "syncEvChargers").success(function(response) {
+                            this.tasks.push(this.newTask)
+                            console.log("EvChargers Sync")
+                        }).error(function(error) {
+                            console.log(error)
+                        });
+
+                        location.reload()
+                    }
+                }
 
           })
       </script>

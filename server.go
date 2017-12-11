@@ -32,7 +32,10 @@ func main() {
 	evcharger := e.Group("/evchargers")
 	{
 		evcharger.File("/list", "public/evcharger.html")
-		evcharger.GET("", handlers.ListEvCharger)
+		evcharger.GET("/api", handlers.ListEvChargerApiData)
+		evcharger.GET("", handlers.GetEvChargers(db))
+		evcharger.PUT("", handlers.SyncEvChargers(db))
+
 	}
 
 	e.Logger.Fatal(e.Start(":8000"))
