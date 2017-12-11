@@ -32,7 +32,13 @@ func main() {
 	evcharger := e.Group("/evchargers")
 	{
 		evcharger.File("/list", "public/evcharger.html")
-		evcharger.GET("", handlers.ListEvCharger)
+		evcharger.GET("/api", handlers.ListEvCharger)
+	}
+
+	blockchain := e.Group("/blockchain")
+	{
+		blockchain.GET("/chain", handlers.GetChain)
+		blockchain.GET("/registrar", handlers.PostRegistrar)
 	}
 
 	e.Logger.Fatal(e.Start(":8000"))
