@@ -40,7 +40,7 @@ func main() {
 
 	blockchain := e.Group("/blockchain")
 	{
-		blockchain.GET("/chain", handlers.RegBlockchain)
+		blockchain.GET("/chain", handlers.GetChain)
 
 	}
 

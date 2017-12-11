@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-func RegBlockchain(c echo.Context) error {
+func GetChain(c echo.Context) error {
 
 	// GET 호출
 	resp, err := http.Get("http://52.78.185.234:7050/chain")
