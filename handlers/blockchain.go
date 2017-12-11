@@ -37,19 +37,18 @@ func PostRegistrar(c echo.Context) error {
 	jsonValue, _ := json.Marshal(jsonData)
 
 	// POST 호출
-	resp, err = http.Post("http://52.78.185.234:7050/chaincode", "application/json", bytes.NewBuffer(jsonValue))
+	request, _ := http.NewRequest("POST", "http://52.78.185.234:7050/chaincode", bytes.NewBuffer(jsonValue))
+	request.Header.Set("Content-Type", "application/json")
+	client := &http.Client{}
+	response, err := client.Do(request)
 	if err != nil {
 		panic(err)
 	}
 
-	defer resp.Body.Close()
-
-	// 결과 출력
-	data, err := ioutil.ReadAll(resp.Body)
+	data, _ := ioutil.ReadAll(response.Body)
 	if err != nil {
 		panic(err)
 	}
-
 	fmt.Println(string(data))
 
 	return c.JSON(http.StatusCreated, string(data))

@@ -41,6 +41,7 @@ func main() {
 	blockchain := e.Group("/blockchain")
 	{
 		blockchain.GET("/chain", handlers.GetChain)
+		blockchain.POST("/registrar", handlers.PostRegistrar)
 
 	}
 
