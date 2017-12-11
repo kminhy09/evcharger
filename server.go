@@ -38,6 +38,12 @@ func main() {
 
 	}
 
+	blockchain := e.Group("/blockchain")
+	{
+		blockchain.GET("/chain", handlers.RegBlockchain)
+
+	}
+
 	e.Logger.Fatal(e.Start(":8000"))
 }
 
