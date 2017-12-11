@@ -51,7 +51,7 @@ func PostRegistrar(c echo.Context) error {
 }
 
 type (
-	Deploy struct {
+	ChinCodeReq struct {
 		Jsonrpc string `json:"jsonrpc"`
 		Method  string `json:"method"`
 		Params  Params `json:"params"`
@@ -69,13 +69,13 @@ type (
 		Name string `json:"name"`
 	}
 	CtorMsg struct {
-		Args [5]string `json:"args"`
+		Args []string `json:"args"`
 	}
 )
 
 func PostDeploy(c echo.Context) error {
 
-	deploy := Deploy{}
+	deploy := ChinCodeReq{}
 	deploy.Jsonrpc = "2.0"
 	deploy.Method = "deploy"
 	params := Params{}
@@ -84,13 +84,48 @@ func PostDeploy(c echo.Context) error {
 	chaincodeID.Name = "mycc"
 	params.ChaincodeID = chaincodeID
 	ctorMsg := CtorMsg{}
-	ctorMsg.Args = [5]string{"init", "a", "100", "b", "200"}
+	ctorMsg.Args = []string{"init", "a", "100", "b", "200"}
 	params.CtorMsg = ctorMsg
 	params.SecureContext = "admin"
 	deploy.Params = params
 	deploy.ID = 1
 
 	pbytes, _ := json.Marshal(deploy)
+	buff := bytes.NewBuffer(pbytes)
+	resp, err := http.Post("http://52.78.185.234:7050/chaincode", "application/json", buff)
+	if err != nil {
+		panic(err)
+	}
+
+	defer resp.Body.Close()
+
+	// 결과 출력
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	return c.JSON(http.StatusCreated, string(data))
+}
+
+func PostInvoke(c echo.Context) error {
+
+	invoke := ChinCodeReq{}
+	invoke.Jsonrpc = "2.0"
+	invoke.Method = "invoke"
+	params := Params{}
+	params.Type = 1
+	chaincodeID := ChaincodeID{}
+	chaincodeID.Name = "mycc"
+	params.ChaincodeID = chaincodeID
+	ctorMsg := CtorMsg{}
+	ctorMsg.Args = []string{"invoke", "a", "b", "10"}
+	params.CtorMsg = ctorMsg
+	params.SecureContext = "admin"
+	invoke.Params = params
+	invoke.ID = 3
+
+	pbytes, _ := json.Marshal(invoke)
 	buff := bytes.NewBuffer(pbytes)
 	resp, err := http.Post("http://52.78.185.234:7050/chaincode", "application/json", buff)
 	if err != nil {
