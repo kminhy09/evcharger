@@ -142,3 +142,38 @@ func PostInvoke(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, string(data))
 }
+
+func PostQuery(c echo.Context) error {
+
+	query := ChinCodeReq{}
+	query.Jsonrpc = "2.0"
+	query.Method = "query"
+	params := Params{}
+	params.Type = 1
+	chaincodeID := ChaincodeID{}
+	chaincodeID.Name = "mycc"
+	params.ChaincodeID = chaincodeID
+	ctorMsg := CtorMsg{}
+	ctorMsg.Args = []string{"query", "a"}
+	params.CtorMsg = ctorMsg
+	params.SecureContext = "admin"
+	query.Params = params
+	query.ID = 5
+
+	pbytes, _ := json.Marshal(query)
+	buff := bytes.NewBuffer(pbytes)
+	resp, err := http.Post("http://52.78.185.234:7050/chaincode", "application/json", buff)
+	if err != nil {
+		panic(err)
+	}
+
+	defer resp.Body.Close()
+
+	// 결과 출력
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	return c.JSON(http.StatusCreated, string(data))
+}
