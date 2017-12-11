@@ -39,6 +39,7 @@ func main() {
 	{
 		blockchain.GET("/chain", handlers.GetChain)
 		blockchain.GET("/registrar", handlers.PostRegistrar)
+		blockchain.GET("/deploy", handlers.PostDeploy)
 	}
 
 	e.Logger.Fatal(e.Start(":8000"))

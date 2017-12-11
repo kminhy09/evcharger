@@ -50,14 +50,14 @@ func PostRegistrar(c echo.Context) error {
 	return c.JSON(http.StatusCreated, string(data))
 }
 
-func PostRegistrar(c echo.Context) error {
+func PostDeploy(c echo.Context) error {
 	params := map[string]string{
 		"enrollId":     "admin",
 		"enrollSecret": "Xurw3yU9zI0l",
 	}
 	pbytes, _ := json.Marshal(params)
 	buff := bytes.NewBuffer(pbytes)
-	resp, err := http.Post("http://52.78.185.234:7050/registrar", "application/json", buff)
+	resp, err := http.Post("http://52.78.185.234:7050/chaincode", "application/json", buff)
 	if err != nil {
 		panic(err)
 	}
