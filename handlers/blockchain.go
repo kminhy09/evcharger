@@ -176,4 +176,8 @@ func PostQuery(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, string(data))
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 09ebc0aace1fd78ff9a985511b5dcac1ad34bb8f

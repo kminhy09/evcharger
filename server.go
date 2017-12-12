@@ -32,10 +32,14 @@ func main() {
 	evcharger := e.Group("/evchargers")
 	{
 		evcharger.File("/list", "public/evcharger.html")
+<<<<<<< HEAD
 		evcharger.GET("/api", handlers.ListEvChargerApiData)
 		evcharger.GET("", handlers.GetEvChargers(db))
 		evcharger.PUT("", handlers.SyncEvChargers(db))
 
+=======
+		evcharger.GET("/api", handlers.ListEvCharger)
+>>>>>>> 09ebc0aace1fd78ff9a985511b5dcac1ad34bb8f
 	}
 
 	blockchain := e.Group("/blockchain")
