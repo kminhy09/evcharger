@@ -3,7 +3,7 @@
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8">
     
-        <title>EV Charger</title>
+        <title>PBC</title>
     
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -25,23 +25,37 @@
     <body>
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <h2>PBC</h2>
                     <br/>
-                    <div class="input-group">
+                    <div class="col-md-8 input-group-1">
                       <input type="text" 
                           class="form-control" 
-                          placeholder="검색" >
-                      <span class="input-group-btn">
-                          <button class="btn btn-primary" type="button" v-on:click="registrar">검색</button>
-                      </span>
+                          placeholder="입력" >
+                    </div>
+                    
+                    <div class="col-md-8 input-group-2">
+                        <span class="input-group-btn1">
+                            <button class="btn btn-primary" type="button" v-on:click="registrar">registrar</button>
+                        </span>  
+                        <span class="input-group-btn2">
+                            <button class="btn btn-primary" type="button" v-on:click="deploy">deploy</button>
+                        </span>     
+                        <span class="input-group-btn3">
+                            <button class="btn btn-primary" type="button" v-on:click="invoke">invoke</button>
+                        </span>
+                        <span class="input-group-btn4">   
+                            <button class="btn btn-primary" type="button" v-on:click="query">query</button>
+                        </span>
                     </div>
                     <br/>
-                    <ul class="list-group">
-                        <li class="list-group-item" >
-                            {{ data}}
-                        </li>
-                    </ul>
+                    <div class="col-md-8 input-group-text">
+                        {{ data}}
+                        <br/>
+                        {{ message}}
+                    </div>
+                    
+                    
                     
                 </div>
             </div>
@@ -51,7 +65,8 @@
                 el: 'body',
   
                 data: {
-                    data: []
+                    data: "",
+                    message: ""
                 },
   
                 created: function() {
@@ -59,13 +74,35 @@
                 },
   
                 methods: {
-                      registrar: function() {
-                        this.$http.get('/blockchain/registrar/:id').then(function(response) {
-                            this.data = response.data ? response.data : []
-                            console.log(response.data);
+                    registrar: function() {
+                        this.$http.get('/blockchain/registrar/admin').then(function(response) {
+                            this.data = response.data.OK ? response.data.OK : ""
+                            console.log(response.data.OK);
                         })
-  
-                          location.reload()
+                      },
+                      deploy: function() {
+                        this.$http.get('/blockchain/deploy/init,a,100,b,200').then(function(response) {
+                            this.data = response.data.result.status ? response.data.result.status : ""
+                            this.message = response.data.result.message ? response.data.result.message : ""
+                            console.log(response.data.result.status);
+                            console.log(response.data.result.message);
+                        })
+                      },
+                      invoke: function() {
+                        this.$http.get('/blockchain/invoke/invoke,a,b,10').then(function(response) {
+                            this.data = response.data.result.status ? response.data.result.status : ""
+                            this.message = response.data.result.message ? response.data.result.message : ""
+                            console.log(response.data.result.status);
+                            console.log(response.data.result.message);
+                        })
+                      },
+                      query: function() {
+                        this.$http.get('/blockchain/query/query,a').then(function(response) {
+                            this.data = response.data.result.status ? response.data.result.status : ""
+                            this.message = response.data.result.message ? response.data.result.message : ""
+                            console.log(response.data.result.status);
+                            console.log(response.data.result.message);
+                        })
                       }
                   }
   

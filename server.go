@@ -40,7 +40,7 @@ func main() {
 
 	blockchain := e.Group("/blockchain")
 	{
-		evcharger.File("/main", "public/blockchain.html")
+		blockchain.File("/main", "public/blockchain.html")
 		blockchain.GET("/chain", handlers.GetChain)
 		blockchain.GET("/registrar/:id", handlers.PostRegistrar)
 		blockchain.GET("/deploy/:params", handlers.PostDeploy)
