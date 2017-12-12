@@ -10,6 +10,39 @@ import (
 	"github.com/labstack/echo"
 )
 
+type (
+	ChinCodeReq struct {
+		Jsonrpc string `json:"jsonrpc"`
+		Method  string `json:"method"`
+		Params  Params `json:"params"`
+		ID      int    `json:"id"`
+	}
+
+	Params struct {
+		Type          int         `json:"type"`
+		ChaincodeID   ChaincodeID `json:"chaincodeID"`
+		CtorMsg       CtorMsg     `json:"ctorMsg"`
+		SecureContext string      `json:"secureContext"`
+	}
+
+	ChaincodeID struct {
+		Name string `json:"name"`
+	}
+	CtorMsg struct {
+		Args []string `json:"args"`
+	}
+	PBCResponse struct {
+		OK      string `json:"OK"`
+		Jsonrpc string `json:"jsonrpc"`
+		Result  Result `json:"result"`
+		ID      int    `json:"id"`
+	}
+	Result struct {
+		Status  string `json:"status"`
+		Message string `json:"message"`
+	}
+)
+
 func GetChain(c echo.Context) error {
 	// GET 호출
 	resp, err := http.Get("http://52.78.185.234:7050/chain")
@@ -50,31 +83,14 @@ func PostRegistrar(c echo.Context) error {
 		panic(err)
 	}
 
-	return c.JSON(http.StatusCreated, string(data))
+	response := PBCResponse{}
+	err = json.Unmarshal(data, &response)
+	if err != nil {
+		panic(err)
+	}
+
+	return c.JSON(http.StatusCreated, response)
 }
-
-type (
-	ChinCodeReq struct {
-		Jsonrpc string `json:"jsonrpc"`
-		Method  string `json:"method"`
-		Params  Params `json:"params"`
-		ID      int    `json:"id"`
-	}
-
-	Params struct {
-		Type          int         `json:"type"`
-		ChaincodeID   ChaincodeID `json:"chaincodeID"`
-		CtorMsg       CtorMsg     `json:"ctorMsg"`
-		SecureContext string      `json:"secureContext"`
-	}
-
-	ChaincodeID struct {
-		Name string `json:"name"`
-	}
-	CtorMsg struct {
-		Args []string `json:"args"`
-	}
-)
 
 func PostDeploy(c echo.Context) error {
 	reqdata := c.Param("params")
@@ -110,7 +126,13 @@ func PostDeploy(c echo.Context) error {
 		panic(err)
 	}
 
-	return c.JSON(http.StatusCreated, string(data))
+	response := PBCResponse{}
+	err = json.Unmarshal(data, &response)
+	if err != nil {
+		panic(err)
+	}
+
+	return c.JSON(http.StatusCreated, response)
 }
 
 func PostInvoke(c echo.Context) error {
@@ -147,7 +169,13 @@ func PostInvoke(c echo.Context) error {
 		panic(err)
 	}
 
-	return c.JSON(http.StatusCreated, string(data))
+	response := PBCResponse{}
+	err = json.Unmarshal(data, &response)
+	if err != nil {
+		panic(err)
+	}
+
+	return c.JSON(http.StatusCreated, response)
 }
 
 func PostQuery(c echo.Context) error {
@@ -184,5 +212,11 @@ func PostQuery(c echo.Context) error {
 		panic(err)
 	}
 
-	return c.JSON(http.StatusCreated, string(data))
+	response := PBCResponse{}
+	err = json.Unmarshal(data, &response)
+	if err != nil {
+		panic(err)
+	}
+
+	return c.JSON(http.StatusCreated, response)
 }

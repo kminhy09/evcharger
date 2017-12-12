@@ -1,0 +1,76 @@
+ 
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    
+        <title>EV Charger</title>
+    
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  
+        <!-- Font Awesome -->
+        <link rel="stylesheet"  href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  
+        <!-- JQuery -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+       
+        <!-- Vue.js -->
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.24/vue.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.7.0/vue-resource.min.js"></script>
+  
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>PBC</h2>
+                    <br/>
+                    <div class="input-group">
+                      <input type="text" 
+                          class="form-control" 
+                          placeholder="검색" >
+                      <span class="input-group-btn">
+                          <button class="btn btn-primary" type="button" v-on:click="registrar">검색</button>
+                      </span>
+                    </div>
+                    <br/>
+                    <ul class="list-group">
+                        <li class="list-group-item" >
+                            {{ data}}
+                        </li>
+                    </ul>
+                    
+                </div>
+            </div>
+        </div>
+        <script>
+            new Vue({
+                el: 'body',
+  
+                data: {
+                    data: []
+                },
+  
+                created: function() {
+                    console.log("main");
+                },
+  
+                methods: {
+                      registrar: function() {
+                        this.$http.get('/blockchain/registrar/:id').then(function(response) {
+                            this.data = response.data ? response.data : []
+                            console.log(response.data);
+                        })
+  
+                          location.reload()
+                      }
+                  }
+  
+            })
+        </script>
+    </body>
+  </html>
+  
