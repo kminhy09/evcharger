@@ -3,7 +3,6 @@ package handlers
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -11,7 +10,6 @@ import (
 )
 
 func GetChain(c echo.Context) error {
-
 	// GET 호출
 	resp, err := http.Get("http://52.78.185.234:7050/chain")
 	if err != nil {
@@ -26,30 +24,156 @@ func GetChain(c echo.Context) error {
 		panic(err)
 	}
 
-	fmt.Println(string(data))
-
 	return c.JSON(http.StatusCreated, string(data))
 }
 
 func PostRegistrar(c echo.Context) error {
-
-	jsonData := map[string]string{"enrollId": "admin", "enrollSecret": "Xurw3yU9zI0l"}
-	jsonValue, _ := json.Marshal(jsonData)
-
-	// POST 호출
-	request, _ := http.NewRequest("POST", "http://52.78.185.234:7050/chaincode", bytes.NewBuffer(jsonValue))
-	request.Header.Set("Content-Type", "application/json")
-	client := &http.Client{}
-	response, err := client.Do(request)
+	params := map[string]string{
+		"enrollId":     "admin",
+		"enrollSecret": "Xurw3yU9zI0l",
+	}
+	pbytes, _ := json.Marshal(params)
+	buff := bytes.NewBuffer(pbytes)
+	resp, err := http.Post("http://52.78.185.234:7050/registrar", "application/json", buff)
 	if err != nil {
 		panic(err)
 	}
 
-	data, _ := ioutil.ReadAll(response.Body)
+	defer resp.Body.Close()
+
+	// 결과 출력
+	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(string(data))
+
+	return c.JSON(http.StatusCreated, string(data))
+}
+
+type (
+	ChinCodeReq struct {
+		Jsonrpc string `json:"jsonrpc"`
+		Method  string `json:"method"`
+		Params  Params `json:"params"`
+		ID      int    `json:"id"`
+	}
+
+	Params struct {
+		Type          int         `json:"type"`
+		ChaincodeID   ChaincodeID `json:"chaincodeID"`
+		CtorMsg       CtorMsg     `json:"ctorMsg"`
+		SecureContext string      `json:"secureContext"`
+	}
+
+	ChaincodeID struct {
+		Name string `json:"name"`
+	}
+	CtorMsg struct {
+		Args []string `json:"args"`
+	}
+)
+
+func PostDeploy(c echo.Context) error {
+
+	deploy := ChinCodeReq{}
+	deploy.Jsonrpc = "2.0"
+	deploy.Method = "deploy"
+	params := Params{}
+	params.Type = 1
+	chaincodeID := ChaincodeID{}
+	chaincodeID.Name = "mycc"
+	params.ChaincodeID = chaincodeID
+	ctorMsg := CtorMsg{}
+	ctorMsg.Args = []string{"init", "a", "100", "b", "200"}
+	params.CtorMsg = ctorMsg
+	params.SecureContext = "admin"
+	deploy.Params = params
+	deploy.ID = 1
+
+	pbytes, _ := json.Marshal(deploy)
+	buff := bytes.NewBuffer(pbytes)
+	resp, err := http.Post("http://52.78.185.234:7050/chaincode", "application/json", buff)
+	if err != nil {
+		panic(err)
+	}
+
+	defer resp.Body.Close()
+
+	// 결과 출력
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	return c.JSON(http.StatusCreated, string(data))
+}
+
+func PostInvoke(c echo.Context) error {
+
+	invoke := ChinCodeReq{}
+	invoke.Jsonrpc = "2.0"
+	invoke.Method = "invoke"
+	params := Params{}
+	params.Type = 1
+	chaincodeID := ChaincodeID{}
+	chaincodeID.Name = "mycc"
+	params.ChaincodeID = chaincodeID
+	ctorMsg := CtorMsg{}
+	ctorMsg.Args = []string{"invoke", "a", "b", "10"}
+	params.CtorMsg = ctorMsg
+	params.SecureContext = "admin"
+	invoke.Params = params
+	invoke.ID = 3
+
+	pbytes, _ := json.Marshal(invoke)
+	buff := bytes.NewBuffer(pbytes)
+	resp, err := http.Post("http://52.78.185.234:7050/chaincode", "application/json", buff)
+	if err != nil {
+		panic(err)
+	}
+
+	defer resp.Body.Close()
+
+	// 결과 출력
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	return c.JSON(http.StatusCreated, string(data))
+}
+
+func PostQuery(c echo.Context) error {
+
+	query := ChinCodeReq{}
+	query.Jsonrpc = "2.0"
+	query.Method = "query"
+	params := Params{}
+	params.Type = 1
+	chaincodeID := ChaincodeID{}
+	chaincodeID.Name = "mycc"
+	params.ChaincodeID = chaincodeID
+	ctorMsg := CtorMsg{}
+	ctorMsg.Args = []string{"query", "a"}
+	params.CtorMsg = ctorMsg
+	params.SecureContext = "admin"
+	query.Params = params
+	query.ID = 5
+
+	pbytes, _ := json.Marshal(query)
+	buff := bytes.NewBuffer(pbytes)
+	resp, err := http.Post("http://52.78.185.234:7050/chaincode", "application/json", buff)
+	if err != nil {
+		panic(err)
+	}
+
+	defer resp.Body.Close()
+
+	// 결과 출력
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
 
 	return c.JSON(http.StatusCreated, string(data))
 }
