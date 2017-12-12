@@ -41,10 +41,10 @@ func main() {
 	blockchain := e.Group("/blockchain")
 	{
 		blockchain.GET("/chain", handlers.GetChain)
-		blockchain.GET("/registrar", handlers.PostRegistrar)
-		blockchain.GET("/deploy", handlers.PostDeploy)
-		blockchain.GET("/invoke", handlers.PostInvoke)
-		blockchain.GET("/query", handlers.PostQuery)
+		blockchain.GET("/registrar/:id", handlers.PostRegistrar)
+		blockchain.GET("/deploy/:params", handlers.PostDeploy)
+		blockchain.GET("/invoke/:params", handlers.PostInvoke)
+		blockchain.GET("/query/:params", handlers.PostQuery)
 	}
 
 	e.Logger.Fatal(e.Start(":8000"))

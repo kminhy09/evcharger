@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/labstack/echo"
 )
@@ -28,8 +29,10 @@ func GetChain(c echo.Context) error {
 }
 
 func PostRegistrar(c echo.Context) error {
+	enrollId := c.Param("id")
+
 	params := map[string]string{
-		"enrollId":     "admin",
+		"enrollId":     enrollId,
 		"enrollSecret": "Xurw3yU9zI0l",
 	}
 	pbytes, _ := json.Marshal(params)
@@ -74,6 +77,8 @@ type (
 )
 
 func PostDeploy(c echo.Context) error {
+	reqdata := c.Param("params")
+	resultdata := strings.Split(reqdata, ",")
 
 	deploy := ChinCodeReq{}
 	deploy.Jsonrpc = "2.0"
@@ -84,7 +89,7 @@ func PostDeploy(c echo.Context) error {
 	chaincodeID.Name = "mycc"
 	params.ChaincodeID = chaincodeID
 	ctorMsg := CtorMsg{}
-	ctorMsg.Args = []string{"init", "a", "100", "b", "200"}
+	ctorMsg.Args = []string{resultdata[0], resultdata[1], resultdata[2], resultdata[3], resultdata[4]}
 	params.CtorMsg = ctorMsg
 	params.SecureContext = "admin"
 	deploy.Params = params
@@ -109,6 +114,8 @@ func PostDeploy(c echo.Context) error {
 }
 
 func PostInvoke(c echo.Context) error {
+	reqdata := c.Param("params")
+	resultdata := strings.Split(reqdata, ",")
 
 	invoke := ChinCodeReq{}
 	invoke.Jsonrpc = "2.0"
@@ -119,7 +126,7 @@ func PostInvoke(c echo.Context) error {
 	chaincodeID.Name = "mycc"
 	params.ChaincodeID = chaincodeID
 	ctorMsg := CtorMsg{}
-	ctorMsg.Args = []string{"invoke", "a", "b", "10"}
+	ctorMsg.Args = []string{resultdata[0], resultdata[1], resultdata[2], resultdata[3]}
 	params.CtorMsg = ctorMsg
 	params.SecureContext = "admin"
 	invoke.Params = params
@@ -144,6 +151,8 @@ func PostInvoke(c echo.Context) error {
 }
 
 func PostQuery(c echo.Context) error {
+	reqdata := c.Param("params")
+	resultdata := strings.Split(reqdata, ",")
 
 	query := ChinCodeReq{}
 	query.Jsonrpc = "2.0"
@@ -154,7 +163,7 @@ func PostQuery(c echo.Context) error {
 	chaincodeID.Name = "mycc"
 	params.ChaincodeID = chaincodeID
 	ctorMsg := CtorMsg{}
-	ctorMsg.Args = []string{"query", "a"}
+	ctorMsg.Args = []string{resultdata[0], resultdata[1]}
 	params.CtorMsg = ctorMsg
 	params.SecureContext = "admin"
 	query.Params = params
