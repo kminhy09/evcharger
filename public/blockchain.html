@@ -81,6 +81,7 @@
                             return
                         }
                         this.$http.get('/blockchain/registrar/' + this.params).then(function(response) {
+                            this.message = ""
                             this.data = response.data.OK ? response.data.OK : ""
                             console.log(response.data.OK);
                         })
