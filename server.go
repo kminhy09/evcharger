@@ -42,7 +42,7 @@ func main() {
 	{
 		blockchain.File("/main", "public/blockchain.html")
 		blockchain.GET("/chain", handlers.GetChain)
-		blockchain.GET("/registrar/:id", handlers.PostRegistrar)
+		blockchain.GET("/registrar/:params", handlers.PostRegistrar)
 		blockchain.GET("/deploy/:params", handlers.PostDeploy)
 		blockchain.GET("/invoke/:params", handlers.PostInvoke)
 		blockchain.GET("/query/:params", handlers.PostQuery)

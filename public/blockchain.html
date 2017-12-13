@@ -26,14 +26,14 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
-                    <h2>PBC</h2>
-                    <br/>
+                    <br/><br/>
                     <div class="col-md-8 input-group-1">
                       <input type="text" 
                           class="form-control" 
-                          placeholder="입력" >
+                          placeholder="입력"
+                          v-model="params" >
                     </div>
-                    
+                    <br/>
                     <div class="col-md-8 input-group-2">
                         <span class="input-group-btn1">
                             <button class="btn btn-primary" type="button" v-on:click="registrar">registrar</button>
@@ -48,7 +48,7 @@
                             <button class="btn btn-primary" type="button" v-on:click="query">query</button>
                         </span>
                     </div>
-                    <br/>
+                    <br/><br/>
                     <div class="col-md-8 input-group-text">
                         {{ data}}
                         <br/>
@@ -66,7 +66,8 @@
   
                 data: {
                     data: "",
-                    message: ""
+                    message: "",
+                    params: ""
                 },
   
                 created: function() {
@@ -75,13 +76,21 @@
   
                 methods: {
                     registrar: function() {
-                        this.$http.get('/blockchain/registrar/admin').then(function(response) {
+                        if (!$.trim(this.params)) {
+                            this.params = ""
+                            return
+                        }
+                        this.$http.get('/blockchain/registrar/' + this.params).then(function(response) {
                             this.data = response.data.OK ? response.data.OK : ""
                             console.log(response.data.OK);
                         })
                       },
                       deploy: function() {
-                        this.$http.get('/blockchain/deploy/init,a,100,b,200').then(function(response) {
+                        if (!$.trim(this.params)) {
+                            this.params = ""
+                            return
+                        }
+                        this.$http.get('/blockchain/deploy/' + this.params).then(function(response) {
                             this.data = response.data.result.status ? response.data.result.status : ""
                             this.message = response.data.result.message ? response.data.result.message : ""
                             console.log(response.data.result.status);
@@ -89,7 +98,11 @@
                         })
                       },
                       invoke: function() {
-                        this.$http.get('/blockchain/invoke/invoke,a,b,10').then(function(response) {
+                        if (!$.trim(this.params)) {
+                            this.params = ""
+                            return
+                        }
+                        this.$http.get('/blockchain/invoke/' + this.params).then(function(response) {
                             this.data = response.data.result.status ? response.data.result.status : ""
                             this.message = response.data.result.message ? response.data.result.message : ""
                             console.log(response.data.result.status);
@@ -97,7 +110,11 @@
                         })
                       },
                       query: function() {
-                        this.$http.get('/blockchain/query/query,a').then(function(response) {
+                        if (!$.trim(this.params)) {
+                            this.params = ""
+                            return
+                        }
+                        this.$http.get('/blockchain/query/' + this.params).then(function(response) {
                             this.data = response.data.result.status ? response.data.result.status : ""
                             this.message = response.data.result.message ? response.data.result.message : ""
                             console.log(response.data.result.status);

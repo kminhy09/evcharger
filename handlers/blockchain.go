@@ -11,6 +11,11 @@ import (
 )
 
 type (
+	Auth struct {
+		EnrollId     string `json:"enrollId"`
+		EnrollSecret string `json:"enrollSecret"`
+	}
+
 	ChinCodeReq struct {
 		Jsonrpc string `json:"jsonrpc"`
 		Method  string `json:"method"`
@@ -62,13 +67,14 @@ func GetChain(c echo.Context) error {
 }
 
 func PostRegistrar(c echo.Context) error {
-	enrollId := c.Param("id")
 
-	params := map[string]string{
-		"enrollId":     enrollId,
-		"enrollSecret": "Xurw3yU9zI0l",
-	}
-	pbytes, _ := json.Marshal(params)
+	reqdata := c.Param("params")
+	resultdata := strings.Split(reqdata, ",")
+	auth := Auth{}
+	auth.EnrollId = resultdata[0]
+	auth.EnrollSecret = resultdata[1]
+
+	pbytes, _ := json.Marshal(auth)
 	buff := bytes.NewBuffer(pbytes)
 	resp, err := http.Post("http://52.78.185.234:7050/registrar", "application/json", buff)
 	if err != nil {
